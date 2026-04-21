@@ -43,6 +43,16 @@
 
 ## ⚙️ 设置：配置 API 密钥
 
+### 依赖安装
+
+确保安装以下依赖：
+
+```bash
+pip install volcengine-python-sdk[ark]>=5.0.12
+```
+
+### 配置 API 密钥
+
 ### 方式 1：手动配置
 
 1. 在插件根目录中找到 `api_keys.json.example` 文件。
@@ -83,7 +93,9 @@
 
 加载 `api_keys.json` 中的密钥配置。这是所有工作流的起点。
 
-- **输入**: `密钥名称` (在 JSON 中配置的 customName)。
+- **输入**:
+  - `密钥名称` (在 JSON 中配置的 customName)。
+  - `endpoint_id` (可选): 自定义端点 ID，如需使用自定义端点请填入。
 - **输出**: `客户端` 实例。
 
 ### `Jimeng 配额设置 (Jimeng Quota Settings)`
