@@ -754,9 +754,10 @@ class JimengClients:
     """
     包装 Ark 客户端的容器类。
     """
-    def __init__(self, ark_client, api_key=None):
+    def __init__(self, ark_client, api_key=None, endpoint_id=None):
         self.ark = ark_client
         self.api_key = api_key
+        self.endpoint_id = endpoint_id
 
     def check_quota(self, model: str, estimated_cost: int):
         if not self.api_key:
@@ -790,25 +791,26 @@ class JimengAPIClient(comfy_io.ComfyNode):
                 comfy_io.String.Input("new_api_key", default=""),
                 comfy_io.String.Input("new_key_name", default=""),
                 comfy_io.Combo.Input("key_name", options=key_names),
+                comfy_io.String.Input("endpoint_id", default=""),
             ],
             outputs=[JimengClientType.Output(display_name="client")],
         )
 
     @classmethod
     def execute(
-        cls, key_name, new_api_key="", new_key_name=""
+        cls, key_name, new_api_key="", new_key_name="", endpoint_id=""
     ) -> comfy_io.NodeOutput:
         api_key = None
 
         if key_name == "Custom":
             if not new_api_key or not new_api_key.strip():
                 raise JimengException(get_text("err_new_key_empty"))
-            
+
             api_key = new_api_key.strip()
-            
+
             if not validate_api_key(api_key):
                 raise JimengException(get_text("err_new_key_invalid"))
-            
+
             if new_key_name and new_key_name.strip():
                 save_api_key(new_key_name.strip(), api_key)
                 print(get_text("info_new_key_saved", name=new_key_name.strip()))
@@ -824,4 +826,6 @@ class JimengAPIClient(comfy_io.ComfyNode):
             api_key=api_key, base_url=JIMENG_API_BASE_URL
         )
 
-        return comfy_io.NodeOutput(JimengClients(ark_client, api_key))
+        endpoint_id_value = endpoint_id.strip() if endpoint_id and endpoint_id.strip() else None
+
+        return comfy_io.NodeOutput(JimengClients(ark_client, api_key, endpoint_id_value))

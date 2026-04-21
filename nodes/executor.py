@@ -394,8 +394,13 @@ class JimengGenerationExecutor:
         if generation_count > 1:
             log_msg("batch_submit_start", count=generation_count, model=model_name)
 
+        # Use endpoint_id if set in client, otherwise use model_name
+        client_endpoint_id = getattr(self.client, 'endpoint_id', None)
+        effective_model = client_endpoint_id if client_endpoint_id else model_name
+        log_msg("debug_endpoint", endpoint_id=client_endpoint_id, model=model_name, effective=effective_model)
+
         request_kwargs = {
-            "model": model_name,
+            "model": effective_model,
             "content": content,
             "return_last_frame": return_last_frame,
         }

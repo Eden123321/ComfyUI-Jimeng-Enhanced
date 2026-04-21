@@ -1207,10 +1207,9 @@ class JimengSeedance2(JimengVideoBase, comfy_io.ComfyNode):
             is_experimental=True,
             inputs=[
                 JimengClientType.Input("client"),
-                comfy_io.Combo.Input(
+                comfy_io.String.Input(
                     "model_version",
-                    options=VIDEO_2_UI_OPTIONS,
-                    default=VIDEO_2_UI_OPTIONS[0],
+                    default="doubao-seedance-2-0-260128",
                 ),
                 comfy_io.String.Input("prompt", multiline=True, default=""),
             ]
@@ -1423,7 +1422,7 @@ class JimengSeedance2(JimengVideoBase, comfy_io.ComfyNode):
             save_last_frame_batch,
             non_blocking,
             node_id,
-            model_name=resolve_model_id(model_version),
+            model_name=model_version,
             content=content,
             forbidden_params=[
                 "resolution",
